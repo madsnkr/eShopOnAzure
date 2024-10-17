@@ -18,7 +18,7 @@ steps:
       appSourcePath: 'src/Catalog.API'
       azureSubscription: 'Azure Learning Sub(d7e3c15f-a785-4ecd-944b-d03698d68b5d)'
       acrName: 'eshoptestacr1'
-      containerAppName: 'catalogapi-test'
+      containerAppName: 'catalog-api-test'
       resourceGroup: 'testapp-rg'
       containerAppEnvironment: 'testappenv12'
       runtimeStack: 'dotnetcore:8.0'
