@@ -5,6 +5,14 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
+  - task: UseDotNet@2
+    inputs:
+      packageType: 'sdk'
+      useGlobalJson: true
+  - task: DotNetCoreCLI@2
+    inputs:
+      projects: 'src/Catalog.API/Catalog.API.csproj'
+      arguments: '--configuration Release'
   - task: AzureContainerApps@1
     inputs:
       appSourcePath: '$(System.DefaultWorkingDirectory)/src/Catalog.API'
