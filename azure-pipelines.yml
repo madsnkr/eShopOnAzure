@@ -9,6 +9,7 @@ steps:
     inputs:
       appSourcePath: '$(System.DefaultWorkingDirectory)/src/Catalog.API'
       azureSubscription: 'Azure Learning Sub(d7e3c15f-a785-4ecd-944b-d03698d68b5d)'
+      acrName: 'eshoptestacr1'
       containerAppName: 'catalogapi-test'
       resourceGroup: 'testapp-rg'
       containerAppEnvironment: 'testappenv12'
