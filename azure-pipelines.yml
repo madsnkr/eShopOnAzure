@@ -21,4 +21,5 @@ steps:
       containerAppName: 'catalogapi-test'
       resourceGroup: 'testapp-rg'
       containerAppEnvironment: 'testappenv12'
+      runtimeStack: 'dotnetcore:8.0'
       environmentVariables: 'ConnectionStrings__catalogdb=secretref:dbconnection-catalogapi'
