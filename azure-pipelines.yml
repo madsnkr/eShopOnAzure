@@ -28,6 +28,7 @@ steps:
       projects: '$(projectPath)'
       arguments: '-c Release'
   - script: |
+      az login
       az containerapp up \
       -n $(caName) -g $(rg) \
       --environment $(acaEnv) \
