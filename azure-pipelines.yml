@@ -21,6 +21,7 @@ steps:
       dotnet workload restore
       dotnet restore $(projectPath)
       dotnet build -c Release $(projectPath)
+      dotnet publish -c Release -o $(Build.ArtifactStagingDirectory) $(projectPath)
   - task: AzureCLI@2
     inputs:
       azureSubscription: 'Azure Learning Sub(d7e3c15f-a785-4ecd-944b-d03698d68b5d)'
@@ -30,5 +31,5 @@ steps:
         az containerapp up \
         -n $(caName) -g $(rg) \
         --environment $(acaEnv) \
-        --source $(projectPath) \
+        --source $(Build.ArtifactStagingDirectory) \
         --registry-server '$(registry).azurecr.io'
