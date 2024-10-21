@@ -12,24 +12,17 @@ variables:
   registry: eshoptestacr1
 
 steps:
-  - task: UseDotNet@2
-    inputs:
-      packageType: 'sdk'
-      useGlobalJson: true
-  - script: |
-      dotnet workload update
-      dotnet workload restore
-      dotnet restore $(projectPath)
-      dotnet build -c Release $(projectPath)
-      dotnet publish -c Release -o $(Build.ArtifactStagingDirectory) $(projectPath)
   - task: AzureCLI@2
     inputs:
       azureSubscription: 'Azure Learning Sub(d7e3c15f-a785-4ecd-944b-d03698d68b5d)'
       scriptType: 'bash'
       scriptLocation: 'inlineScript'
       inlineScript: |
+        docker build -t $(registry).azurecr.io/catalog.api:latest --build-arg SERVICE=Catalog.API -f Dockerfile .
+        docker push $(registry).azurecr.io/catalog.api:latest
+
         az containerapp up \
         -n $(caName) -g $(rg) \
         --environment $(acaEnv) \
-        --source $(Build.ArtifactStagingDirectory) \
+        --image $(registry).azurecr.io/catalog.api:latest \
         --registry-server '$(registry).azurecr.io'
