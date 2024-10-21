@@ -11,8 +11,10 @@ RUN dotnet restore && dotnet publish -c Release -o out
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 ARG SERVICE
+ENV PROJECT=${SERVICE}
 
-WORKDIR /${SERVICE}
+WORKDIR /${PROJECT}
 
-COPY --from=build-stage /src/${SERVICE}/out .
-ENTRYPOINT [ "dotnet", "${SERVICE}.dll" ]
+COPY --from=build-stage /src/${PROJECT}/out .
+
+CMD ["sh", "-c", "dotnet ${PROJECT}.dll"]
