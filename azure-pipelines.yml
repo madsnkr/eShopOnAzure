@@ -5,11 +5,8 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-  projectPath: src/Catalog.API
-  caName: catalog-test
-  rg: testapp-rg
-  acaEnv: testappenv12
-  registry: eshoptestacr1
+- group: 'test-global-vg'
+- group: 'test-secrets-vg'
 
 steps:
   - task: AzureCLI@2
@@ -18,11 +15,12 @@ steps:
       scriptType: 'bash'
       scriptLocation: 'inlineScript'
       inlineScript: |
-        docker build -t $(registry).azurecr.io/catalog.api:latest --build-arg SERVICE=Catalog.API -f Dockerfile .
-        docker push $(registry).azurecr.io/catalog.api:latest
+        az acr login -n $(registry) -u $(registry) -p $(acr-password)
+        docker build -t $(registry).azurecr.io/catalog.api:$(Build.BuildId) --build-arg SERVICE=Catalog.API -f Dockerfile .
+        docker push $(registry).azurecr.io/catalog.api:$(Build.BuildId)
 
         az containerapp up \
         -n $(caName) -g $(rg) \
         --environment $(acaEnv) \
-        --image $(registry).azurecr.io/catalog.api:latest \
+        --image $(registry).azurecr.io/catalog.api:$(Build.BuildId) \
         --registry-server '$(registry).azurecr.io'
