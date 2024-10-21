@@ -27,10 +27,14 @@ steps:
       command: 'build'
       projects: '$(projectPath)'
       arguments: '-c Release'
-  - script: |
-      az login
-      az containerapp up \
-      -n $(caName) -g $(rg) \
-      --environment $(acaEnv) \
-      --source $(projectPath) \
-      --registry-server '$(registry).azurecr.io'
+  - task: AzureCLI@2
+    inputs:
+      azureSubscription: 'Azure Learning Sub(d7e3c15f-a785-4ecd-944b-d03698d68b5d)'
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        az containerapp up \
+        -n $(caName) -g $(rg) \
+        --environment $(acaEnv) \
+        --source $(projectPath) \
+        --registry-server '$(registry).azurecr.io'
