@@ -5,20 +5,11 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-  - task: UseDotNet@2
-    inputs:
-      packageType: 'sdk'
-      useGlobalJson: true
-  - task: DotNetCoreCLI@2
-    inputs:
-      projects: 'src/Catalog.API/Catalog.API.csproj'
-      arguments: '--configuration Release'
   - task: AzureContainerApps@1
     inputs:
-      appSourcePath: 'src/Catalog.API'
+      appSourcePath: '$(System.DefaultWorkingDirectory)/src/Catalog.API'
       azureSubscription: 'Azure Learning Sub(d7e3c15f-a785-4ecd-944b-d03698d68b5d)'
       acrName: 'eshoptestacr1'
-      containerAppName: 'catalog-api-test'
+      containerAppName: 'catalog-test'
       resourceGroup: 'testapp-rg'
       containerAppEnvironment: 'testappenv12'
-      environmentVariables: 'ConnectionStrings__catalogdb=secretref:dbconnection-catalogapi'
