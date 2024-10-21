@@ -4,12 +4,32 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
+variables:
+  projectPath: src/Catalog.API
+  caName: catalog-test
+  rg: testapp-rg
+  acaEnv: testappenv12
+  registry: eshoptestacr1
+
 steps:
-  - task: AzureContainerApps@1
+  - task: UseDotNet@2
     inputs:
-      appSourcePath: '$(System.DefaultWorkingDirectory)/src/Catalog.API'
-      azureSubscription: 'Azure Learning Sub(d7e3c15f-a785-4ecd-944b-d03698d68b5d)'
-      acrName: 'eshoptestacr1'
-      containerAppName: 'catalog-test'
-      resourceGroup: 'testapp-rg'
-      containerAppEnvironment: 'testappenv12'
+      packageType: 'sdk'
+      useGlobalJson: true
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: 'restore'
+      projects: '$(projectPath)'
+      feedsToUse: 'config'
+      nugetConfigPath: 'nuget.config'
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: 'build'
+      projects: '$(projectPath)'
+      arguments: '-c Release'
+  - script: |
+      az containerapp up \
+      -n $(caName) -g $(rg) \
+      --environment $(acaEnv) \
+      --source $(projectPath) \
+      --registry-server '$(registry).azurecr.io'
