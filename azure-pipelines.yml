@@ -16,17 +16,11 @@ steps:
     inputs:
       packageType: 'sdk'
       useGlobalJson: true
-  - task: DotNetCoreCLI@2
-    inputs:
-      command: 'restore'
-      projects: '$(projectPath)'
-      feedsToUse: 'config'
-      nugetConfigPath: 'nuget.config'
-  - task: DotNetCoreCLI@2
-    inputs:
-      command: 'build'
-      projects: '$(projectPath)'
-      arguments: '-c Release'
+  - script: |
+      dotnet workload update
+      dotnet workload restore
+      dotnet restore $(projectPath)
+      dotnet build -c Release $(projectPath)
   - task: AzureCLI@2
     inputs:
       azureSubscription: 'Azure Learning Sub(d7e3c15f-a785-4ecd-944b-d03698d68b5d)'
